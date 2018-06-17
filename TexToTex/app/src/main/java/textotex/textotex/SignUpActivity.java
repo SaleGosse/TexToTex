@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -170,7 +171,7 @@ public class SignUpActivity extends Activity
             } catch (MalformedURLException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                return "exception";
+                return "exception0";
             }
             try {
                 // Setup HttpURLConnection class to send and receive data from php and mysql
@@ -204,7 +205,7 @@ public class SignUpActivity extends Activity
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();
-                return "exception";
+                return "exception1";
             }
 
             try {
@@ -245,6 +246,23 @@ public class SignUpActivity extends Activity
 
             //this method will be running on UI thread
             pdLoading.dismiss();
+
+            if(result.contains("true"))
+            {
+                Intent newIntent = new Intent(SignUpActivity.this, LoginActivity.class);
+
+                newIntent.putExtra("login", usernameS);
+
+                SignUpActivity.this.finish();
+
+                startActivity(newIntent);
+            }
+            else if (result.contains("error: "))
+            {
+                String error_txt = result.substring(result.indexOf("error: ") + "error: ".length());
+
+                Toast.makeText(SignUpActivity.this, error_txt, Toast.LENGTH_LONG).show();
+            }
 
         }
     }
