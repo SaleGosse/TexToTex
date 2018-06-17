@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <ImageView
+        android:id="@+id/row_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="4dp"
+        android:src="@android:drawable/ic_lock_idle_charging">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/row_name"
+        android:layout_width="154dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/row_icon"
+        android:paddingTop="5dp"
+        android:text="@+id/label"
+        android:textSize="40px"
+        android:textColor="@color/startblue"></TextView>
+
+    <TextView
+        android:id="@+id/row_message"
+        android:layout_below="@+id/row_name"
+        android:layout_toRightOf="@+id/row_icon"
+        android:layout_alignLeft="@+id/row_name"
+        android:layout_width="262dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="17dp"
+        android:hint="No message yet"
+        android:textSize="22px"
+        android:textColor="@color/startblue"/>
+
+
+    <TextView
+        android:id="@+id/row_date"
+        android:layout_width="wrap_content"
+        android:layout_height="23dp"
+        android:paddingRight="10dp"
+        android:paddingTop="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:textSize="20px"
+        android:textStyle="bold"
+        android:textColor="@color/startblue"/>
+
+    <ImageView
+        android:id="@+id/row_unread"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp"
+        android:src="@drawable/ic_new_message"
+        android:layout_below="@+id/row_date"/>
+
+</RelativeLayout>

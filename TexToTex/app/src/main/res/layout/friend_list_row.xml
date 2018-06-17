@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <ImageView
+        android:id="@+id/row_icon"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="4dp"
+        android:src="@android:drawable/ic_lock_idle_charging">
+    </ImageView>
+
+    <TextView
+        android:id="@+id/row_userName"
+        android:layout_width="154dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/row_icon"
+        android:paddingTop="5dp"
+        android:text="@+id/label"
+        android:textSize="40px">
+
+    </TextView>
+
+
+</RelativeLayout>

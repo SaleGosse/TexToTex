@@ -1,0 +1,62 @@
+create database new;
+use new;
+
+CREATE TABLE User (idUser INT PRIMARY KEY AUTO_INCREMENT, pseudo varchar(255), Telephone_Number varchar(255));
+
+CREATE TABLE Message(idMessage  INT PRIMARY KEY AUTO_INCREMENT, message text, date varchar(256), idConversation int, iduser int , position int );
+
+CREATE TABLE Conversation(idConversation INT PRIMARY KEY AUTO_INCREMENT, nomConv varchar(256) ,date varchar(256));
+
+CREATE TABLE user_Conversation(idUser_Conv INT PRIMARY KEY AUTO_INCREMENT, idUser int ,idConversation int);
+
+CREATE TABLE Personnes(idPersonnes INT PRIMARY KEY AUTO_INCREMENT NOT NULL, nomPersonnes  Varchar (255), username  Varchar (255) NOT NULL, password     Varchar (255) NOT NULL, toke Varchar (255), idRole   Integer NOT NULL, Telephone_Number varchar(255));
+
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("toto", "07.77.37.72.83"); 
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("bernard", "06.98.00.23.11");
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("JP", "06.98.00.23.11" )
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("koukoum", "06.98.00.23.11");
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("linux", "06.98.00.23.11");
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("serveur", "06.98.00.23.11");
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("albert", "06.98.00.23.11");
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ("michel", "06.98.00.23.11");
+
+INSERT INTO User (pseudo, Telephone_Number) VALUES ( "nory", "06.98.00.23.11");
+
+---------------------------------------------------------------------------
+
+INSERT INTO Message ( message , date ,idConversation, iduser, position)
+VALUES ("Salut ! ", " 25/05/2018 10:00",1,1,1); 
+
+INSERT INTO Message ( message , date ,idConversation, iduser, position)
+VALUES ("Salut ! Comment tu vas ?! ", "25/05/2018 10:01",1,2,2);
+
+INSERT INTO Message ( message , date ,idConversation, iduser, position)
+VALUES ("Ca va ca va  ! Comment tu vas ?! ", "25/05/2018 10:01",1,1,3);
+
+
+-------------------------------------------------------------------------------
+
+INSERT INTO Personnes (nomPersonnes, username, password, toke, idRole, Telephone_Number) VALUES ("grosminet", "titi", "cce66316b4c1c59df94a35afb80cecd82d1a8d91b554022557e115f5c275f515","oui",0,1);
+
+-------------------------------------------------------------------------------
+
+INSERT INTO Conversation(idConversation , nomConv , date )
+VALUES (1,"First Conversation","25/05/2018");
+
+-------------------------------------------------------------------------------
+
+INSERT INTO user_Conversation(idUser ,idConversation)
+VALUES (1,1);
+
+INSERT INTO user_Conversation(idUser ,idConversation)
+VALUES (2,1);
+
+-------------------------------------------------------------------------------

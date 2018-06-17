@@ -1,0 +1,87 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity"
+    android:background="@drawable/androidrain"
+    android:id="@+id/ChatRoom">
+
+    <ListView
+        android:id="@+id/msgview"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/test"
+        android:layout_weight="1"
+        android:background="@null"
+        android:divider="@null"
+        android:stackFromBottom="true"
+        android:transcriptMode="alwaysScroll"
+        ></ListView>
+
+    <RelativeLayout
+        android:id="@+id/invitation"
+        android:orientation="vertical"
+        android:background="@color/app_blue"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_width="250dp"
+        android:layout_height="200dp">
+
+        <TextView
+            android:id="@+id/invitation_text"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:padding="10dp"
+            android:background="@color/amber_primary_dark"
+            android:textColor="@color/black"
+            android:text="You received a new invitation."
+            android:textSize="20dp"
+            />
+
+        <Button
+            android:id="@+id/bt_accept"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:text="@string/bt_accept"
+            android:background="@color/green_primary"/>
+        <Button
+            android:id="@+id/bt_decline"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:background="@color/red_primary"
+            android:text="@string/bt_decline"/>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="60dp"
+        android:id="@+id/test"
+        android:layout_marginBottom="3dp"
+        android:layout_marginLeft="3dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/msg"
+            android:layout_width="262dp"
+            android:layout_height="fill_parent"
+            android:enabled="true"
+            android:background="@drawable/edit_text_style" />
+
+        <Button
+            android:id="@+id/send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="1dp"
+            android:enabled="true"
+            android:background="@drawable/buttonstyle"
+            android:text="Send" />
+    </LinearLayout>
+</RelativeLayout>
