@@ -28,7 +28,7 @@
 			$conversationID = $_POST['conversationID'];
 
 			//Check if it's an invitation
-			$rq_check_invit = "SELECT i.idInvitation,p.firstName,p.lastName,u.login FROM Invitation i LEFT JOIN Profile p ON p.idUser = i.idUser JOIN User u ON p.idUser = u.idUser WHERE i.idUser = :userID AND i.idConversation = :conversationID AND isOK = 0";
+			$rq_check_invit = "SELECT i.idInvitation,p.firstName,p.lastName,u.login FROM Invitation i LEFT JOIN Profile p ON p.idUser = i.idUser JOIN User u ON p.idUser = u.idUser WHERE i.idTarget = :userID AND i.idConversation = :conversationID AND isOK = 0";
 			$request = $dataBase->prepare($rq_check_invit);
 			$request->bindParam(":userID", $userID, PDO::PARAM_INT);
 			$request->bindParam(":conversationID", $conversationID, PDO::PARAM_INT);

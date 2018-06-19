@@ -55,13 +55,20 @@
 					$request->execute();
 
 					//Inserting our rsa key in linkConversation
-					$rq_insert_modulus = "UPDATE linkConversation SET (pubExp = :exponent, modulus = :modulus) WHERE idUser = :userID AND idConversation = :conversationID";
+					$rq_insert_modulus = "UPDATE linkConversation SET pubExp = :exponent, modulus = :modulus WHERE idUser = :userID AND idConversation = :conversationID";
 					$request = $db->prepare($rq_insert_modulus);
 
 					$request->bindParam(":exponent", $exponent, PDO::PARAM_STR);
 					$request->bindParam(":modulus", $modulus, PDO::PARAM_STR);
 					$request->bindParam(":userID", $userID, PDO::PARAM_INT);
 					$request->bindParam(":conversationID", $conversationID, PDO::PARAM_INT);
+
+					$request->execute();
+
+					//Debug:
+					$rq_del_invit = "DELETE FROM Invitation WHERE idInvitation = :invitationID";
+					$request = $db->prepare($rq_del_invit);
+					$request->bindParam(":invitationID", $invitationID, PDO::PARAM_INT);
 
 					$request->execute();
 				}
