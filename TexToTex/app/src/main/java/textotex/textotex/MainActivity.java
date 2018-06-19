@@ -118,6 +118,12 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.action_logout)
         {
+            SharedPreferences.Editor editor = getSharedPreferences(getString(R.string.preference_file), Context.MODE_PRIVATE).edit();
+
+            editor.putString(getString(R.string.cookie_key), "null");
+
+            editor.apply();
+
             this.mCM.callLogin();
 
             return true;

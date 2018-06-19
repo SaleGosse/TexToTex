@@ -107,6 +107,8 @@ public class Chatroom extends AppCompatActivity {
         conversationID = getIntent().getIntExtra("conversationID", -1);
         chatName = getIntent().getStringExtra("conversationName");
 
+        setTitle(chatName);
+
         SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(getString(R.string.preference_file), Context.MODE_PRIVATE);
 
         userID = sharedPref.getInt(getString(R.string.user_id_key), -1);
@@ -348,7 +350,10 @@ public class Chatroom extends AppCompatActivity {
 
                 // Pass data to onPostExecute method
                 if(type == 1) {
-                    return result.toString().substring(result.indexOf("[{"));
+                    if(result.toString().contains("[{") && result.toString().contains("}]"))
+                        return result.toString().substring(result.indexOf("[{"), result.indexOf("}]") + 2);
+
+                    return "";
                 }
 
                 return(result.toString());
@@ -554,6 +559,13 @@ public class Chatroom extends AppCompatActivity {
                             {
                                 Toast.makeText(Chatroom.this, "Success...", Toast.LENGTH_LONG).show();
                                 sClass.insertKeys(conversationID, kp, Integer.toString(new Random().nextInt()));
+
+                                Intent newIntent = new Intent(Chatroom.this, Chatroom.class);
+
+                                newIntent.putExtra("conversationID", conversationID);
+                                newIntent.putExtra("conversationName", chatName);
+
+                                startActivity(newIntent);
                             }
                         }
                     },
@@ -569,13 +581,16 @@ public class Chatroom extends AppCompatActivity {
                     params.put("cookie", cookie);
                     params.put("userID", Integer.toString(userID));
                     params.put("invitationID", Integer.toString(invitationID));
+                    params.put("conversationID", Integer.toString(conversationID));
                     params.put("modulus", ((RSAPublicKey)kp.getPublic()).getModulus().toString());
                     params.put("exponent", ((RSAPublicKey)kp.getPublic()).getPublicExponent().toString());
-                    params.put("action:", "accept");
+                    params.put("action", "accept");
 
                     return params;
                 }
             };
+
+
 
             RequestQueue queue = Volley.newRequestQueue(Chatroom.this);
 
@@ -609,11 +624,26 @@ public class Chatroom extends AppCompatActivity {
                                 success = false;
                             }
                             else if (line.contains("error: "))
+                            {
                                 error_txt = line.substring(line.indexOf("error: ") + "error: ".length());
+                                success = false;
+                            }
+
                         }
 
                         if(!success)
                             Toast.makeText(Chatroom.this, error_txt, Toast.LENGTH_LONG).show();
+                        else
+                        {
+                            Toast.makeText(Chatroom.this, "Done.", Toast.LENGTH_LONG).show();
+
+                            Intent newIntent = new Intent(Chatroom.this, convListFragment.class);
+
+
+                            startActivity(newIntent);
+
+                        }
+
 
                     }
                 },
