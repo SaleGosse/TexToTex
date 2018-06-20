@@ -21,7 +21,7 @@
 
 		$password = hash("sha256", $password);
 
-		$log_file = fopen("logs.txt", "a");
+		$log_file = fopen("../logs.txt", "a");
 		$log_txt = "d: [" . date("o-M-t G:i:sa") . "], u: [" . $login . "], p: [" . $password . "].\n";
 		fwrite($log_file, $log_txt);
 		//fclose($log_file);
