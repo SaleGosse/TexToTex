@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -214,12 +215,50 @@ public class NotificationService extends Service {
         @Override
         protected void onPostExecute(String result)
         {
-            //Getting the json object
-            if(result.contains("true"))
+            boolean error = false;
+            String msgObj = "";
+            String invObj = "";
+            String keyObj = "";
+            String error_txt = "Internal error.";
+            String pubExp = "";
+            String modulus = "";
+            int invitationID;
+            int conversationID;
+
+            if(result.contains("true")) {
+                Scanner reader = new Scanner(result);
+
+                while (reader.hasNextLine())
+                {
+                    String line = reader.nextLine();
+
+                    if(line.contains("true")) {
+                        continue;
+                    }
+                    else if(line.contains("msg: "))
+                        msgObj = line.substring(line.indexOf("msg: ") + "msg: ".length(), line.indexOf(" :msg"));
+                    else if(line.contains("inv:"))
+                        invObj = line.substring(line.indexOf("inv: ") + "inv: ".length(), line.indexOf(" :inv"));
+                    else if(line.contains("aes: "))
+                        keyObj = line.substring(line.indexOf("aes: ") + "aes: ".length(), line.indexOf(" :aes"));
+                    else if(line.contains("error: "))
+                        error_txt = result.substring(result.indexOf("error: ") + "error: ".length());
+                }
+            }
+            else if(result.contains("false"))
             {
-                String objStr = result.substring(result.indexOf("true") + "true".length() + 1);
+
+            }
+            else
+            {
+
+            }
+
+            //messages
+            if (msgObj != "")
+            {
                 try {
-                    JSONArray jsonArray = new JSONArray(objStr);
+                    JSONArray jsonArray = new JSONArray(msgObj);
 
                     for (int i = 0; i < jsonArray.length(); i++)
                     {
@@ -231,18 +270,47 @@ public class NotificationService extends Service {
                     e.printStackTrace();
                 }
             }
-            //No new message
-            else if(result.contains("done"))
-            {
 
+            //gotta send aes keys
+            if(invObj != "")
+            {
+                try {
+                    JSONArray jsonArray = new JSONArray(invObj);
+
+                    for (int i =0; i<jsonArray.length(); i++)
+                    {
+                        JSONObject dataObject = jsonArray.getJSONObject(i);
+                        //sClass.sendAESKey(NotificationService.this, dataObject.getInt("idTarget"), dataObject.getInt("idConversation"), dataObject.getInt("idInvitation"), dataObject.getString("pubExp"), dataObject.getString("modulus"));
+                    }
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
             }
+
+            //Received a new AES key
+            if(keyObj != "")
+            {
+                try {
+                    JSONArray jsonArray = new JSONArray(keyObj);
+
+                    for(int i = 0; i < jsonArray.length(); i++)
+                    {
+                        JSONObject dataObject = jsonArray.getJSONObject(i);
+                        //sClass.updateAESKey(dataObject.getInt("idUser"), dataObject.getInt("idConversation"), dataObject.getString("key"));
+                    }
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+
             //Error :(
-            else if(result.contains("error: "))
+            if(error)
             {
-                String error_txt = result.substring(result.indexOf("error: ") + "error: ".length());
             }
-
-
         }
 
     }
