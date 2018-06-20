@@ -187,30 +187,49 @@ public class convListFragment extends ListFragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                             //we have the array named hero inside the object
-                            //so here we are getting that json array
-                            JSONArray dataArray = new JSONArray(response);
+                        if(response.contains("true")) {
+                            if (response.contains("[{") && response.contains("}]")) {
+                                String listObj = response.substring(response.indexOf("[{"), response.indexOf("}]") + 2);
 
-                            //now looping through all the elements of the json array
-                            for (int i = 0; i < dataArray.length(); i++) {
-                                //getting the json object of the particular index inside the array
-                                JSONObject dataObject = dataArray.getJSONObject(i);
+                                try {
+                                    //we have the array named hero inside the object
+                                    //so here we are getting that json array
+                                    JSONArray dataArray = new JSONArray(listObj);
 
-                                //creating a hero object and giving them the values from json object
-                                convListData data = new convListData(Integer.parseInt(dataObject.getString("idConversation")), dataObject.getString("name"), dataObject.getString("content"), dataObject.getString("date"), dataObject.getBoolean("unread"));
-                                // adding the data to the datalist
-                                listData.add(data);
+                                    //now looping through all the elements of the json array
+                                    for (int i = 0; i < dataArray.length(); i++) {
+                                        //getting the json object of the particular index inside the array
+                                        JSONObject dataObject = dataArray.getJSONObject(i);
+
+                                        //creating a hero object and giving them the values from json object
+                                        convListData data = new convListData(Integer.parseInt(dataObject.getString("idConversation")), dataObject.getString("name"), dataObject.getString("content"), dataObject.getString("date"), dataObject.getBoolean("unread"));
+                                        // adding the data to the datalist
+                                        listData.add(data);
+                                    }
+
+                                    //creating custom adapter object
+                                    convListAdapter adapter = new convListAdapter(getContext(), listData);
+
+                                    //adding the adapter to listview
+                                    setListAdapter(adapter);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
+                        }
+                        else
+                        {
+                            String error_txt = "Internal error.";
 
-                            //creating custom adapter object
-                            convListAdapter adapter = new convListAdapter(getContext(), listData);
+                            if(response.contains("error: "))
+                                error_txt = response.substring(response.indexOf("error: "));
 
-                            //adding the adapter to listview
-                            setListAdapter(adapter);
+                            Toast.makeText(getContext(), error_txt, Toast.LENGTH_LONG).show();
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            if(response.contains("cookie"))
+                                (new cookieManager(getActivity())).callLogin();
+
                         }
                     }
                 },
@@ -225,8 +244,8 @@ public class convListFragment extends ListFragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
 
-                params.put("cookie", convListFragment.this.mCookie);
                 params.put("userID", Integer.toString(convListFragment.this.userID));
+                params.put("cookie", convListFragment.this.mCookie);
 
                 return params;
             }

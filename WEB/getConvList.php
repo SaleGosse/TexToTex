@@ -14,7 +14,7 @@
 		if(!checkCookie($dataB, $userID, $cookie))
 		{
 			//Printing the error
-			echo "false\n" . "error: Invalid cookie.\n";
+			echo "false\n" . "error: Invalid cookie.";
 
 			//Closing the db and exiting
 			$dataB = null;
@@ -31,8 +31,12 @@
 
 		$result = $request->fetchAll();
 
-		echo json_encode($result) . "\n";
+		echo "true\n";
+
+		if(!empty($result))
+			echo json_encode($result) . "\n";
 	}
-	echo "false\n" . "error: Missing POST parameters.\n";
+	else
+		echo "false\n" . "error: Missing POST parameters.\n";
 
 ?>

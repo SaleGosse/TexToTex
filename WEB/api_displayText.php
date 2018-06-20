@@ -15,7 +15,7 @@
 		if(!checkCookie($dataBase, $userID, $cookie))
 		{
 			//Printing the error
-			echo "error: Invalid cookie.\n";
+			echo "false\n" . "error: Invalid cookie.";
 
 			//Closing the db and exiting
 			$dataBase = null;
