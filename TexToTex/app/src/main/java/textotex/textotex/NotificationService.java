@@ -3,12 +3,15 @@ package textotex.textotex;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +46,10 @@ public class NotificationService extends Service {
     private final IBinder mBinder = new LocalBinder();
 
     private int mUserID;
+    private String mCookie;
+
+    private boolean stop = false;
+    private boolean cancel = false;
 
     public List<notificationData> mDataArray;
 
@@ -91,21 +98,22 @@ public class NotificationService extends Service {
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    Log.e("IUOP", "REQUEST NOW");
-
                     //Check internet connection -> not working
                     if(isInternetAvailable())
-                    {
-                        Log.e("IUOP", "INTERNET AVAILABLE");
-                    }
+                        stop = false;
+                    else
+                        stop = true;
 
-                    CheckNewMessage check = new CheckNewMessage();
-                    check.execute();
-
-                    if(mDataArray.size() != 0)
+                    if(!stop && !cancel)
                     {
-                        for(int i =0; i < mDataArray.size(); i++) {
-                            mDataArray.get(i).show(NotificationService.this);
+                        CheckNewMessage check = new CheckNewMessage();
+                        check.execute();
+
+                        if(mDataArray.size() != 0)
+                        {
+                            for(int i =0; i < mDataArray.size(); i++) {
+                                mDataArray.get(i).show(NotificationService.this);
+                            }
                         }
                     }
                     //LED control
@@ -120,14 +128,12 @@ public class NotificationService extends Service {
     }
 
     public boolean isInternetAvailable() {
-        try {
-            InetAddress ipAddr = InetAddress.getByName("google.com");
-            //You can replace it with your name
-            return !ipAddr.equals("");
 
-        } catch (Exception e) {
-            return false;
-        }
+        ConnectivityManager manager = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo info = manager.getActiveNetworkInfo();
+
+        return info != null && info.isConnected();
     }
 
     private class CheckNewMessage extends AsyncTask<String, String, String>
@@ -219,6 +225,7 @@ public class NotificationService extends Service {
             String msgObj = "";
             String invObj = "";
             String keyObj = "";
+            String newObj = "";
             String error_txt = "Internal error.";
             String pubExp = "";
             String modulus = "";
@@ -237,21 +244,23 @@ public class NotificationService extends Service {
                     }
                     else if(line.contains("msg: "))
                         msgObj = line.substring(line.indexOf("msg: ") + "msg: ".length(), line.indexOf(" :msg"));
+                    else if(line.contains("new: "))
+                        newObj = line.substring(line.indexOf("new: ") + "new: ".length(), line.indexOf(" :new"));
                     else if(line.contains("inv:"))
                         invObj = line.substring(line.indexOf("inv: ") + "inv: ".length(), line.indexOf(" :inv"));
                     else if(line.contains("aes: "))
                         keyObj = line.substring(line.indexOf("aes: ") + "aes: ".length(), line.indexOf(" :aes"));
-                    else if(line.contains("error: "))
-                        error_txt = result.substring(result.indexOf("error: ") + "error: ".length());
                 }
             }
             else if(result.contains("false"))
             {
-
+                error = true;
+                if(result.contains("error: "))
+                    error_txt = result.substring(result.indexOf("error: ") + "error: ".length());
             }
             else
             {
-
+                error = true;
             }
 
             //messages
@@ -269,6 +278,22 @@ public class NotificationService extends Service {
                 catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            if(newObj != "")
+            {
+                try {
+                    JSONArray jsonArray = new JSONArray(newObj);
+
+                    for(int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject dataObject = jsonArray.getJSONObject(i);
+                        mDataArray.add(new notificationData(dataObject.getString("convName"), dataObject.getString("login"), dataObject.getString("date"), "I want to chat with you !", mUserID, dataObject.getInt("conversationID")));
+                    }
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
 
             //gotta send aes keys
@@ -310,6 +335,7 @@ public class NotificationService extends Service {
             //Error :(
             if(error)
             {
+                cancel = true;
             }
         }
 

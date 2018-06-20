@@ -27,7 +27,6 @@ CREATE TABLE `Conversation` (
   `convName` varchar(255) DEFAULT NULL,
   `creationDate` varchar(255) DEFAULT NULL,
   `lastDate` varchar(255) DEFAULT NULL,
-  `exponent` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idConversation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -39,6 +38,30 @@ CREATE TABLE `Conversation` (
 LOCK TABLES `Conversation` WRITE;
 /*!40000 ALTER TABLE `Conversation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `Conversation` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `Friend`
+--
+
+DROP TABLE IF EXISTS `Friend`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `Friend` (
+  `idFriend` int(11) NOT NULL AUTO_INCREMENT,
+  `idUser` int(11) DEFAULT NULL,
+  `idUserFriend` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idFriend`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `Friend`
+--
+
+LOCK TABLES `Friend` WRITE;
+/*!40000 ALTER TABLE `Friend` DISABLE KEYS */;
+/*!40000 ALTER TABLE `Friend` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -54,6 +77,8 @@ CREATE TABLE `Invitation` (
   `idConversation` int(11) DEFAULT NULL,
   `isOK` tinyint(1) DEFAULT NULL,
   `idTarget` int(11) DEFAULT NULL,
+  `tmpAes` varchar(1000) DEFAULT NULL,
+  `notified` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idInvitation`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -107,7 +132,7 @@ CREATE TABLE `MessageStatus` (
   `unread` tinyint(1) DEFAULT NULL,
   `notified` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`idMessageStatus`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,7 +158,7 @@ CREATE TABLE `Profile` (
   `firstName` varchar(255) DEFAULT NULL,
   `phoneNumber` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idProfile`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -142,7 +167,7 @@ CREATE TABLE `Profile` (
 
 LOCK TABLES `Profile` WRITE;
 /*!40000 ALTER TABLE `Profile` DISABLE KEYS */;
-INSERT INTO `Profile` VALUES (1,1,'Loiseau','Titi','06.98.00.23.11'),(2,2,'Lechat','Grosminet','06.98.01.23.11');
+INSERT INTO `Profile` VALUES (1,1,'Loiseau','Titi','06.98.00.23.11'),(2,2,'Lechat','Grosminet','06.98.01.23.11'),(3,3,'Tonpaire','Jesuis','NULL');
 /*!40000 ALTER TABLE `Profile` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -160,7 +185,7 @@ CREATE TABLE `User` (
   `cookie` varchar(255) DEFAULT NULL,
   `pub_key` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idUser`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -169,7 +194,7 @@ CREATE TABLE `User` (
 
 LOCK TABLES `User` WRITE;
 /*!40000 ALTER TABLE `User` DISABLE KEYS */;
-INSERT INTO `User` VALUES (1,'titi','463dfe4008d391a10dd6d1faaaa9fc83b9528392bc5930a28b271485df1418be','47df23e9321f778e16bbfa67993ca434dba30bff03175d4d51bbddcfc5421abe',NULL),(2,'grosminet','e64b0c8af7c39513dc33ec7a448b929a2504276058b3178563bae6fb2f1c581f','29ff03d9c2ce758aa9b51d5bc6bc0a2925adcfaa941b9fe67b48b29c1def13cf',NULL);
+INSERT INTO `User` VALUES (1,'titi','463dfe4008d391a10dd6d1faaaa9fc83b9528392bc5930a28b271485df1418be','c24ff77932023f56e7013ccff53d793ae1dfaefbb225fbcdb3ba92af3fb6aab2',NULL),(2,'grosminet','e64b0c8af7c39513dc33ec7a448b929a2504276058b3178563bae6fb2f1c581f','5bbad9b2fc34173a0dac451fe547a82508096097747196e2bdd7ded004f919ca',NULL),(3,'Jesuis','6c3fee50324633bae05b8e6dbe800d3c231e480f8c4dc938a9236947a16a4c2e','2ebcb65485f8c9ca0c608c71790e328387d9cb338b74f02647d006aaf6a1a044','NULL');
 /*!40000 ALTER TABLE `User` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,8 +210,9 @@ CREATE TABLE `linkConversation` (
   `idUser` int(11) DEFAULT NULL,
   `idConversation` int(11) DEFAULT NULL,
   `modulus` varchar(1000) DEFAULT NULL,
+  `pubExp` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`idLinkConversation`)
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,20 +223,6 @@ LOCK TABLES `linkConversation` WRITE;
 /*!40000 ALTER TABLE `linkConversation` DISABLE KEYS */;
 /*!40000 ALTER TABLE `linkConversation` ENABLE KEYS */;
 UNLOCK TABLES;
-
-
-DROP TABLE IF EXISTS `Friend`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `Friend` (
-  `idFriend` int(11) NOT NULL AUTO_INCREMENT,
-  `idUser` int(11) DEFAULT NULL,
-  `idUserFriend` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idFriend`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -221,4 +233,4 @@ CREATE TABLE `Friend` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-13 18:00:30
+-- Dump completed on 2018-06-20 19:31:20

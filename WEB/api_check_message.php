@@ -34,6 +34,33 @@ if(isset($_POST['userID']))
 		echo "msg: " . json_encode($unread) . " :msg\n";
 	}
 
+	//Checking if we got a new invitation
+	$rq_get_notif2 = "SELECT i.idInvitation,c.convName,u.login,c.creationDate AS \"date\",i.idConversation AS conversationID FROM Invitation i LEFT JOIN Conversation c ON i.idConversation = c.idConversation LEFT JOIN Profile p ON i.idUser = p.idUser LEFT JOIN User u ON i.idUser = u.idUser WHERE (i.notified = 0 OR i.notified = NULL) AND i.idTarget = :userID";
+	$request = $db->prepare($rq_get_notif2);
+
+	$request->bindParam(":userID", $userID, PDO::PARAM_INT);
+
+	$request->execute();
+
+	$newinv = $request->fetchAll();
+
+	if(!empty($newinv))
+	{
+		$rq_set_notif = "UPDATE Invitation SET notified = 1 WHERE idInvitation = :id";
+
+		$request = $db->prepare($rq_set_notif);
+
+		for ($i=0; $i < count($newinv); $i++) { 
+			$request->bindParam(":id", $newinv[$i]["idInvitation"], PDO::PARAM_INT);
+			
+			$request->execute();
+		}
+		
+		echo "new: " . json_encode($newinv) . " :new\n";
+	}
+
+
+
 	//Checking if gotta send aes keys
 	$rq_get_inv = "SELECT i.idInvitation,i.idConversation,i.idTarget,l.pubExp,l.modulus FROM Invitation i LEFT JOIN linkConversation l ON i.idTarget = l.idUser WHERE i.idUser = :userID AND i.isOK = 1 AND i.tmpAes IS NULL";
 

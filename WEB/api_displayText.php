@@ -59,7 +59,7 @@
 			$rq_update_unread = "DELETE FROM MessageStatus WHERE idMessageStatus IN (SELECT idMessageStatus FROM (SELECT ms.idMessageStatus FROM MessageStatus ms JOIN Message m ON ms.idMessage = m.idMessage WHERE m.idConversation = :conversationID AND m.idUser = :userID) subquery)";
 
 			$request = $dataBase->prepare($rq_update_unread);
-			$request->bindParam(':conversationID', $idConversation, PDO::PARAM_INT);
+			$request->bindParam(':conversationID', $conversationID, PDO::PARAM_INT);
 			$request->bindParam(':userID', $userID, PDO::PARAM_INT);
 			$request->execute();
 

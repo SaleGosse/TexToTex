@@ -123,7 +123,7 @@
 			$request->execute();
 
 			//Inserting the invitation
-			$rq_insert_invit = "INSERT INTO Invitation (idUser,idConversation,isOK,idTarget) VALUES (:userID, :conversationID, 0, :targetID)";
+			$rq_insert_invit = "INSERT INTO Invitation (idUser,idConversation,isOK,idTarget,notified) VALUES (:userID, :conversationID, 0, :targetID, 0)";
 
 			$request = $dataB->prepare($rq_insert_invit);
 			$request->bindParam(":userID", $userID, PDO::PARAM_INT);

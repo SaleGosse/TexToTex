@@ -543,7 +543,7 @@ public class Chatroom extends AppCompatActivity {
                                 String line = reader.nextLine();
 
                                 if(line.contains("true"))
-                                    continue;
+                                    success = true;
                                 else if(line.contains("false"))
                                     success = false;
                                 else if(line.contains("error: "))
